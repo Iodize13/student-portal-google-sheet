@@ -9,22 +9,23 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      studentId TEXT NOT NULL UNIQUE,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL
     );
   `);
 });
 
-export const getUserByEmail = (email: string, callback: (err: Error | null, row: User | undefined) => void) => {
-  db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+export const getUserByStudentId = (studentId: string, callback: (err: Error | null, row: User | undefined) => void) => {
+  db.get('SELECT * FROM users WHERE studentId = ?', [studentId], (err, row) => {
     callback(err, row);
   });
 };
 
-export const createUser = (email: string, hashedPassword: string, callback: (err: Error | null, userId?: number) => void) => {
+export const createUser = (studentId: string, email: string, hashedPassword: string, callback: (err: Error | null, userId?: number) => void) => {
   db.run(
-    'INSERT INTO users (email, password) VALUES (?, ?)',
-    [email, hashedPassword],
+    'INSERT INTO users (studentId, email, password) VALUES (?, ?, ?)',
+    [studentId, email, hashedPassword],
     function (err) {
       callback(err, this?.lastID); // Use optional chaining to ensure `this` exists
     }

@@ -1,34 +1,31 @@
 // pages/login.tsx
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const router = useRouter();
+export default function Login() {
+  const [studentId, setStudentId] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-    // Validate inputs
-    if (!email || !password) {
-      setError('Email and password are required');
+    if (!studentId || !password) {
+      setError('Both fields are required');
       return;
     }
 
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ studentId, password }),
     });
 
     const data = await response.json();
-
     if (response.ok) {
-      router.push('/dashboard'); // Redirect to dashboard on success
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
     } else {
-      setError(data.message || 'An error occurred');
+      setError(data.message);
     }
   };
 
@@ -37,10 +34,10 @@ export default function LoginPage() {
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Student ID"
+          value={studentId}
+          onChange={(e) => setStudentId(e.target.value)}
         />
         <input
           type="password"
@@ -54,4 +51,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

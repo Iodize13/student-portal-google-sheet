@@ -2,18 +2,18 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
-export default function RegisterPage() {
+export default function Register() {
+  const [studentId, setStudentId] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const router = useRouter();
+  const router = useRouter(); 
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-    // Validate inputs
-    if (!email || !password || !confirmPassword) {
+    if (!studentId || !email || !password || !confirmPassword) {
       setError('All fields are required');
       return;
     }
@@ -26,15 +26,15 @@ export default function RegisterPage() {
     const response = await fetch('/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, confirmPassword }),
+      body: JSON.stringify({ studentId, email, password, confirmPassword }),
     });
 
     const data = await response.json();
-
     if (response.ok) {
-      router.push('/login'); // Redirect to login page on success
+      // Redirect to login page
+      window.location.href = '/login';
     } else {
-      setError(data.message || 'An error occurred');
+      setError(data.message);
     }
   };
 
@@ -42,6 +42,12 @@ export default function RegisterPage() {
     <div>
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Student ID"
+          value={studentId}
+          onChange={(e) => setStudentId(e.target.value)}
+        />
         <input
           type="email"
           placeholder="Email"
@@ -66,4 +72,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
