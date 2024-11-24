@@ -1,14 +1,16 @@
-// pages/api/register.ts
 import bcrypt from 'bcryptjs';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { createUser, getUserByEmail } from '../../lib/db';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createUser, getUserByStudentId } from '../../lib/db';
 
 export default async function registerHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { email, password, confirmPassword } = req.body;
+    // Log incoming data to ensure it's being received correctly
+    console.log('Request body:', req.body);
+
+    const { studentId, email, password, confirmPassword } = req.body;
 
     // Validate inputs
-    if (!email || !password || !confirmPassword) {
+    if (!studentId || !email || !password || !confirmPassword) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -17,15 +19,15 @@ export default async function registerHandler(req: NextApiRequest, res: NextApiR
     }
 
     try {
-      // Check if email already exists
-      getUserByEmail(email, (err, existingUser) => {
+      // Check if studentId already exists
+      getUserByStudentId(studentId, (err, existingUser) => {
         if (err) {
           console.error('Database error:', err);
           return res.status(500).json({ message: 'Internal Server Error' });
         }
 
         if (existingUser) {
-          return res.status(400).json({ message: 'Email already exists' });
+          return res.status(400).json({ message: 'Student ID already exists' });
         }
 
         // Hash the password
@@ -36,7 +38,7 @@ export default async function registerHandler(req: NextApiRequest, res: NextApiR
           }
 
           // Save user to the database
-          createUser(email, hashedPassword, (err, userId) => {
+          createUser(studentId, email, hashedPassword, (err, userId) => {
             if (err) {
               console.error('Database error during user creation:', err);
               return res.status(500).json({ message: 'Error saving user' });
