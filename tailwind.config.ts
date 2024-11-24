@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        present: '#F6E05E',
+        late: '#F6AD55',
+        absent: '#F56565',
+        unknown: '#CBD5E0',
       },
     },
   },
