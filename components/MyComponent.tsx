@@ -1,24 +1,59 @@
-import { useEffect, useState } from 'react';
+// components/StudentScores.js (or MyComponent.tsx)
+import React, { useState, useEffect } from 'react';
 
-const MyComponent = () => {
- const [data, setData] = useState([]);
+const StudentScores = ({ studentId }) => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
- useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('/api/getSheetData?spreadsheetId=1AU-MOFkHquxXDc4s2mubRQIGbNl7o7uNT8UvS0g2dx8&range=Sheet1!A1:B10');
-      const result = await response.json();
-      setData(result);
-    };
+  // useEffect to trigger the fetchData when studentId changes
+  useEffect(() => {
+      // Define the fetchData function inside useEffect
+      const fetchData = async () => {
+          setError(null);
+          try {
+              const res = await fetch(`/api/getStudentScores?studentId=${studentId}`);
+              const data = await res.json();
 
-    fetchData();
- }, []);
+              if (!res.ok) {
+                  throw new Error(data.error || 'Failed to fetch data');
+              }
 
- return (
+              setData(data);
+          } catch (err) {
+              console.error('Error in fetchData:', err.message);  // Log the error details here
+              setError(err.message);  // Display error in the UI
+          }
+      };
+
+      // Call fetchData only if studentId is available
+      if (studentId) {
+          fetchData();
+      }
+  }, [studentId]);  // Dependency array: fetchData will run when studentId changes
+
+  // Handle error state
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // Handle loading state
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  // Render the data once it's fetched successfully
+  return (
     <div>
-      <h1>Google Sheets Data</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <h1>Scores and Attendance</h1>
+      <ul>
+        {data.map((item, index) => (
+          <li key={index}>
+            Score: {item[1]}, Attendance: {item[2]}
+          </li>
+        ))}
+      </ul>
     </div>
- );
+  );
 };
 
-export default MyComponent;
+export default StudentScores;

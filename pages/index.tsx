@@ -14,9 +14,11 @@ const geistMono = localFont({
 });
 
 export default function Home() {
+  const studentId = '673040640-3'; // You can dynamically generate this if needed
+
   return (
-	  <div>
-	  	<MyComponent />
-	  </div>
+    <div>
+      <MyComponent studentId={studentId} />
+    </div>
   );
 }
