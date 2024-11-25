@@ -37,7 +37,7 @@ export default function Login() {
         <h1 className="text-2xl font-bold text-center mb-4">Login</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">Student ID</label>
             <input
               type="text"
               placeholder="Student ID"
@@ -71,6 +71,15 @@ export default function Login() {
           </button>
         </form>
         {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-700">Don't have an account?</p>
+          <a
+            href="/register"
+            className="text-orange-500 font-medium hover:underline"
+          >
+            Register here
+          </a>
+        </div>
       </div>
     </div>
   );
