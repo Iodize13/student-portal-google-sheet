@@ -1,11 +1,16 @@
-import { useState } from 'react';
+// pages/login.tsx
+import { useState, useContext } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';  // Make sure this import is correct
+import { useRouter } from 'next/router';
 
-export default function Login() {
+export default function LoginPage() {
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const { login } = useContext(AuthContext); // Using AuthContext to manage state
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -25,10 +30,8 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Store studentId in localStorage or cookie
-        localStorage.setItem('studentId', studentId); // Or use a secure cookie mechanism
-        // Redirect to the dashboard
-        window.location.href = '/dashboard';
+        login(studentId); // Store the studentId in the context
+        router.push('/dashboard');
       } else {
         setError(data.message || 'Login failed');
       }
@@ -78,15 +81,6 @@ export default function Login() {
           </button>
         </form>
         {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-700">Don't have an account?</p>
-          <a
-            href="/register"
-            className="text-orange-500 font-medium hover:underline"
-          >
-            Register here
-          </a>
-        </div>
       </div>
     </div>
   );
