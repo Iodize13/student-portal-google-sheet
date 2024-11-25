@@ -1,24 +1,26 @@
-import Image from "next/image";
-import localFont from "next/font/local";
-import MyComponent from '../components/MyComponent';
+import { GetServerSideProps } from 'next';
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req } = context;
+
+  // Check for authentication cookie or session token
+  const isLoggedIn = req.cookies.token; // Replace `token` with your actual auth cookie key
+
+  if (!isLoggedIn) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false, // Not a permanent redirect, so it allows users to login and return
+      },
+    };
+  }
+
+  // If logged in, render the home page
+  return {
+    props: {}, // Pass any data as props here if needed
+  };
+};
 
 export default function Home() {
-  const studentId = '673040640-3'; // You can dynamically generate this if needed
-
-  return (
-    <div>
-      <MyComponent studentId={studentId} />
-    </div>
-  );
+  return <h1>Welcome to the Home Page!</h1>;
 }
