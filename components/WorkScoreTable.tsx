@@ -29,7 +29,7 @@ const WorkScoreTable: React.FC<WorkScoreTableProps> = ({ data }) => {
     <table className="w-full border-collapse border border-gray-300">
       <thead>
         <tr className="bg-gray-200 text-left">
-          <th className="p-2 border border-gray-300">Date</th>
+          <th className="p-2 border border-gray-300">Classes</th>
           <th className="p-2 border border-gray-300">Status</th>
         </tr>
       </thead>
