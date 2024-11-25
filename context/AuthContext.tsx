@@ -1,4 +1,3 @@
-// context/AuthContext.tsx
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
@@ -23,12 +22,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storedId = localStorage.getItem('studentId');
     if (storedId) {
       setStudentId(storedId);
-      setIsLoggedIn(true);
+      setIsLoggedIn(true); // Set login state if studentId exists in localStorage
     }
   }, []);
 
   const login = (id: string) => {
-    localStorage.setItem('studentId', id);
+    localStorage.setItem('studentId', id);  // Store studentId in localStorage
     setStudentId(id);
     setIsLoggedIn(true);
   };

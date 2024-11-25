@@ -1,7 +1,6 @@
-// pages/login.tsx
 import { useState, useContext } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { AuthContext } from '../context/AuthContext';  // Make sure this import is correct
+import { AuthContext } from '../context/AuthContext';  // Access the login function from context
 import { useRouter } from 'next/router';
 
 export default function LoginPage() {
@@ -9,7 +8,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useContext(AuthContext); // Using AuthContext to manage state
+  const { login } = useContext(AuthContext);  // Access the login function from context
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -30,8 +29,11 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        login(studentId); // Store the studentId in the context
-        router.push('/dashboard');
+        console.log('Login successful, studentId:', studentId); // Log on successful login
+        login(studentId);  // Update the AuthContext with the studentId
+
+        // Now redirect to /work-score or any other page you want after login
+        router.push('/work-score');  // Redirect directly to work-score after login
       } else {
         setError(data.message || 'Login failed');
       }
@@ -65,17 +67,10 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-2 p-2 pr-10 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-            >
-              {showPassword ? <EyeOff /> : <Eye />}
-            </button>
           </div>
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white p-2 rounded-lg hover:bg-orange-600 transition"
+            className="w-full bg-custom-orange text-white p-2 rounded-lg hover:bg-orange-700 transition"
           >
             Login
           </button>
@@ -85,7 +80,7 @@ export default function LoginPage() {
           <p className="text-sm text-gray-700">Don't have an account?</p>
           <a
             href="/register"
-            className="text-orange-500 font-medium hover:underline"
+            className="text-custom-orange font-medium hover:underline"
           >
             Register here
           </a>
