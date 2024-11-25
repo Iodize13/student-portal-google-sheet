@@ -48,7 +48,27 @@ const StudentScores = ({ studentId }) => {
       <ul>
         {data.map((item, index) => (
           <li key={index}>
-            Score: {item[1]}, Attendance: {item[2]}
+            Student ID: {item[1]}, Name : {item[2]},
+            Class 1: {item[4]},
+            Class 2: {item[5]},
+            Class 3: {item[6]},
+            Class 4: {item[7]},
+            Class 5: {item[8]},
+            Class 6: {item[9]},
+            Class 7: {item[10]},
+            Class 8: {item[11]},
+            Class 9: {item[12]},
+            Class 10: {item[13]},
+            Class 11: {item[14]},
+            Class 12: {item[15]},
+            Class 13: {item[16]},
+            Class 14: {item[17]},
+            Class 15: {item[18]},
+            Class 18: {item[21]},
+            Class 19: {item[22]},
+            Class 20: {item[23]},
+            absent counts: {item[19]},
+            Att points: {item[20]},
           </li>
         ))}
       </ul>
