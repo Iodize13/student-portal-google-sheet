@@ -1,6 +1,5 @@
-// pages/login.tsx
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react'; // Import Eye and EyeOff from Lucide Icons
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
   const [studentId, setStudentId] = useState('');
@@ -16,18 +15,26 @@ export default function Login() {
       return;
     }
 
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ studentId, password }),
-    });
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, password }),
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      // Redirect to dashboard
-      window.location.href = '/dashboard';
-    } else {
-      setError(data.message);
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store studentId in localStorage or cookie
+        localStorage.setItem('studentId', studentId); // Or use a secure cookie mechanism
+        // Redirect to the dashboard
+        window.location.href = '/dashboard';
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (err) {
+      setError('An error occurred during login');
+      console.error(err);
     }
   };
 
