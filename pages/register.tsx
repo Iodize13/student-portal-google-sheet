@@ -85,12 +85,21 @@ export default function Register() {
           </div>
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white p-2 rounded-lg hover:bg-orange-600 transition"
+            className="w-full bg-custom-orange text-white p-2 rounded-lg hover:bg-orange-700 transition"
           >
             Register
           </button>
         </form>
         {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-700">Already have an account?</p>
+          <a
+            href="/signin"
+            className="text-custom-orange font-medium hover:underline"
+          >
+            Sign in
+          </a>
+        </div>
       </div>
     </div>
   );

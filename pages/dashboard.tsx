@@ -1,18 +1,26 @@
-// pages/dashboard.tsx
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import Layout from '../components/Layout';
+import WorkScoreTable from '../components/WorkScoreTable';
+import ErrorReportButton from '../components/ErrorReportButton';
 import { useRouter } from 'next/router';
 
-const StudentScores = () => {
+type AttendanceRecord = {
+  date: string;
+  status: 'Present' | 'Late' | 'Absent' | 'Unknown';
+};
+
+const WorkScorePage: React.FC = () => {
   const { isLoggedIn, studentId, logout } = useContext(AuthContext);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<AttendanceRecord[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true); // Loading state
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      router.push('/login');
+    // Check if user is logged in
+    if (!isLoggedIn || !studentId) {
+      router.push('/login'); // Redirect to login if not logged in or studentId is not set
       return;
     }
 
@@ -42,67 +50,42 @@ const StudentScores = () => {
     };
 
     fetchData();
-  }, [studentId, isLoggedIn, router]);
+  }, [isLoggedIn, studentId, router]);  // Dependencies: re-run if login state or studentId changes
 
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
+  const handleReportError = () => {
+    alert('Error reporting triggered.');
   };
 
   // Show loading state while waiting for data
-  if (loading) {
+  if (!data.length && !error) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="text-xl font-semibold">Loading...</div>
-      </div>
+      <Layout>
+        <h1 className="text-2xl font-bold mb-4">Work Score</h1>
+        <p className="text-gray-600 mb-4">Loading...</p>
+      </Layout>
     );
   }
 
-  // Show error message if any
+  // Show error if there was an issue fetching data
   if (error) {
-    return <div className="text-red-500 text-center mt-4">{error}</div>;
+    return (
+      <Layout>
+        <h1 className="text-2xl font-bold mb-4">Work Score</h1>
+        <p className="text-red-500 mb-4">{error}</p>
+      </Layout>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
-      <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Scores and Attendance</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-          >
-            Logout
-          </button>
-        </div>
-        <table className="table-auto w-full border-collapse border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="border border-gray-300 px-4 py-2">Student ID</th>
-              <th className="border border-gray-300 px-4 py-2">Name</th>
-              <th className="border border-gray-300 px-4 py-2">Class 1</th>
-              <th className="border border-gray-300 px-4 py-2">Class 2</th>
-              {/* Add more headers as needed */}
-              <th className="border border-gray-300 px-4 py-2">Absent Counts</th>
-              <th className="border border-gray-300 px-4 py-2">Attendance Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="border border-gray-300 px-4 py-2">{item[1]}</td>
-                <td className="border border-gray-300 px-4 py-2">{item[2]}</td>
-                <td className="border border-gray-300 px-4 py-2">{item[4]}</td>
-                <td className="border border-gray-300 px-4 py-2">{item[5]}</td>
-                <td className="border border-gray-300 px-4 py-2">{item[19]}</td>
-                <td className="border border-gray-300 px-4 py-2">{item[20]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <Layout>
+
+      <h1 className="text-2xl font-bold mb-4">Work Score</h1>
+{data.map((item, index) => (
+      <p className="text-gray-600 mb-4">{item[1]} {item[2]}</p>
+))}
+      <WorkScoreTable data={data} />
+    </Layout>
   );
 };
 
-export default StudentScores;
+export default WorkScorePage;

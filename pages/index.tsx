@@ -9,7 +9,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!isLoggedIn) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/signin',
         permanent: false, // Not a permanent redirect, so it allows users to login and return
       },
     };

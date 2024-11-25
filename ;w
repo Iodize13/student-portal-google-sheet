@@ -1,0 +1,73 @@
+import React from 'react';
+
+type AttendanceRecord = {
+  date: string;
+  status: 'Present' | 'Late' | 'Absent' | 'Unknown';
+};
+
+interface WorkScoreTableProps {
+  data: AttendanceRecord[];
+}
+
+const getStatusColor = (status: string): string => {
+  const colors: { [key: string]: string } = {
+    Present: 'bg-green-500', // Change to an actual color class
+    Late: 'bg-yellow-500', 
+    Absent: 'bg-red-500', 
+    Unknown: 'bg-gray-500', 
+  };
+  return colors[status] || 'bg-unknown';
+};
+
+const formatDate = (date: string): string => {
+  const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+  return new Date(date).toLocaleDateString('en-GB', options);
+};
+
+const WorkScoreTable: React.FC<WorkScoreTableProps> = ({ data }) => {
+  const classIndexes = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23]; // The different indexes you're accessing in the `record` array
+  const classOffset = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 20];  // Offset for class names (Class 1, Class 2, etc.)
+
+  return (
+      <div>
+        <tr className="bg-gray-200 text-left">
+          <th className="p-2 border border-gray-300">Absent counts</th>
+     {data.map((record) => (
+          <th className="p-2 border border-gray-300">{record[19]}</th>
+     ))}
+        </tr>
+        <tr className="bg-gray-200 text-left">
+          <th className="p-2 border border-gray-300">Attendance points</th>
+     {data.map((record) => (
+          <th className="p-2 border border-gray-300">{record[20]}</th>
+     ))}
+        </tr>
+
+    <br></br>
+
+    <table className="w-full border-collapse border border-gray-300">
+      <thead>
+        <tr className="bg-gray-200 text-left">
+          <th className="p-2 border border-gray-300">Class</th>
+          <th className="p-2 border border-gray-300">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((record, index) => (
+          // Iterating over classIndexes and classOffset inside the map loop
+          classIndexes.map((classIndex, idx) => (
+            <tr key={`${index}-${classIndex}`} className="hover:bg-gray-100">
+              <td className="p-2 border border-gray-300">Class {classOffset[idx]}</td>
+              <td className={`p-2 border border-gray-300 ${getStatusColor(record[classIndex])}`}>
+                {record[classIndex]}
+              </td>
+            </tr>
+          ))
+        ))}
+      </tbody>
+    </table>
+    </div>
+  );
+};
+
+export default WorkScoreTable;

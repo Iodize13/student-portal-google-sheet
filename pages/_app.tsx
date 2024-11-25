@@ -9,12 +9,12 @@ function MyApp({ Component, pageProps }) {
   const { isLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
-    const publicPaths = ['/login', '/register'];
+    const publicPaths = ['/signin', '/register'];
     const path = router.pathname;
 
     if (!isLoggedIn && !publicPaths.includes(path)) {
-      router.push('/login');
-    } else if (isLoggedIn && path === '/login') {
+      router.push('/signin');
+    } else if (isLoggedIn && path === '/signin') {
       router.push('/dashboard');
     }
   }, [isLoggedIn, router]);
