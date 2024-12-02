@@ -1,45 +1,45 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
-  isLoggedIn: boolean;
+  isSignedIn: boolean;
   studentId: string | null;
-  login: (studentId: string) => void;
-  logout: () => void;
+  signin: (studentId: string) => void;
+  signout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  isLoggedIn: false,
+  isSignedIn: false,
   studentId: null,
-  login: () => {},
-  logout: () => {},
+  signin: () => {},
+  signout: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [studentId, setStudentId] = useState<string | null>(null);
 
   useEffect(() => {
     const storedId = localStorage.getItem('studentId');
     if (storedId) {
       setStudentId(storedId);
-      setIsLoggedIn(true); // Set login state if studentId exists in localStorage
+      setIsSignedIn(true); // Set signin state if studentId exists in localStorage
     }
   }, []);
 
-  const login = (id: string) => {
+  const signin = (id: string) => {
     localStorage.setItem('studentId', id);  // Store studentId in localStorage
     setStudentId(id);
-    setIsLoggedIn(true);
+    setIsSignedIn(true);
   };
 
-  const logout = () => {
+  const signout = () => {
     localStorage.removeItem('studentId');
     setStudentId(null);
-    setIsLoggedIn(false);
+    setIsSignedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, studentId, login, logout }}>
+    <AuthContext.Provider value={{ isSignedIn, studentId, signin, signout }}>
       {children}
     </AuthContext.Provider>
   );
