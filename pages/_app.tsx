@@ -6,18 +6,23 @@ import '../styles/globals.css'; // Ensure you have global styles
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isSignedIn } = useContext(AuthContext);
 
   useEffect(() => {
     const publicPaths = ['/signin', '/register'];
     const path = router.pathname;
 
-    if (!isLoggedIn && !publicPaths.includes(path)) {
+    // If the user is not signed in and trying to access a protected path, redirect to /signin
+    if (!isSignedIn && !publicPaths.includes(path)) {
       router.push('/signin');
-    } else if (isLoggedIn && path === '/signin') {
+    } 
+    // If the user is signed in and trying to access /signin, redirect to /dashboard
+    else if (isSignedIn && path === '/signin') {
       router.push('/dashboard');
     }
-  }, [isLoggedIn, router]);
+    // If the user is signed in and trying to access /dashboard, no redirect needed
+    // (It would already be at /dashboard, so no need to reroute)
+  }, [isSignedIn, router]);
 
   return <Component {...pageProps} />;
 }

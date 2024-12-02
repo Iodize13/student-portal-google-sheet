@@ -2,46 +2,46 @@ import React, { useEffect, useContext, ReactNode } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import DarkModeToggle from './ui/DarkModeToggle';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  const { isSignedIn, signout } = useContext(AuthContext);
   const router = useRouter();
 
-  // Redirect users to login if they are not logged in
+  // Redirect users to signin if they are not signed in
   useEffect(() => {
-    if (!isLoggedIn) {
-      router.push('/login');
+    if (!isSignedIn) {
+      router.push('/signin');
     }
-  }, [isLoggedIn, router]);
+  }, [isSignedIn, router]);
 
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
+  const handleSignout = () => {
+    signout();
+    router.push('/signin');
   };
 
   return (
       <div className="flex flex-col min-h-screen">
-      <header className="border-b-2 bg-white text-white p-4">
+      <header className="border-b-2 bg-white dark:bg-gray-900 text-white p-2">
       <div className="container mx-auto flex justify-between items-center">
-      <div className="text-custom-orange font-bold text-4xl">Eng COE</div>
+      <div className="text-orange-600 font-bold text-2xl md:text-3xl">Eng COE</div>
       <nav className="flex items-center space-x-4">
-      {isLoggedIn ? (
+      <DarkModeToggle />
+      {isSignedIn ? (
           <>
-          <a href="/work-score" className="text-black hover:text-slate-400">Work Score</a>
-          <a href="/attendance" className="text-black hover:text-slate-400">Attendance</a>
           <button
-          onClick={handleLogout}
-          className="bg-custom-orange text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition"
+          onClick={handleSignout}
+          className="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 transition"
           >
-          Logout
+          Sign out
           </button>
           </>
       ) : (
-      <p className="text-slate-300">You are not logged in</p>
+      <p className="text-slate-300">You are not signed in</p>
       )}
       </nav>
       </div>

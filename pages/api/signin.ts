@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUserByStudentId } from '../../lib/db';
 
-export default async function loginHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function signinHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { studentId, password } = req.body;
 
@@ -36,7 +36,7 @@ export default async function loginHandler(req: NextApiRequest, res: NextApiResp
           }
 
           // If match, login success
-          return res.status(200).json({ message: 'Login successful' });
+          return res.status(200).json({ message: 'Sign in successful' });
         });
       });
     } catch (error) {

@@ -1,12 +1,12 @@
 import React from 'react';
 
-type AttendanceRecord = {
+type WorkScoreRecord = {
   date: string;
   status: 'p' | 'l' | 'a' | 'u';
 };
 
 interface WorkScoreTableProps {
-  data: AttendanceRecord[];
+  data: WorkScoreRecord[];
 }
 
 const getStatusColor = (status: string): string => {
@@ -29,58 +29,59 @@ const getStatusFromCharacter = (status: string): string => {
   };
   return statusMap[status] || 'Unknown';  // Default to 'Unknown' if the character doesn't match
 };
-
-const formatDate = (date: string): string => {
-  const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-  return new Date(date).toLocaleDateString('en-GB', options);
+ 
+const getScoreOrDash = (scores: string[], index: number): string => {
+  return scores[index] ? scores[index] : '-';
 };
 
 const WorkScoreTable: React.FC<WorkScoreTableProps> = ({ data }) => {
-  const classIndexes = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23]; // The different indexes you're accessing in the `record` array
-  const classOffset = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 20];  // Offset for class names (Class 1, Class 2, etc.)
+  const tasks = ["CA 1", "CA 2", "CA 3", "CA 4", "Project", "Spark", "Attendance"];
+  const fullScores = ["7", "7", "6", "5", "20", "10", "5"];
 
   return (
-      <div>
-    <table className="w-1/2 border-collapse border border-slate-300 rounded-lg overflow-hidden">
+      <div className ="flex-col">
+      <div className ="pb-2 sm:pb-3 flex items-center justify-center">
+    <table className="w-full sm:w-96 rounded-lg overflow-hidden">
       <thead>
-        <tr className="bg-slate-200 text-center">
-          <th className="w-1/2 p-2 border border-slate-300">Absent counts</th>
+        <tr className="bg-slate-100 text-center">
+          <th className="w-1/2 bg-orange-600 text-white font-medium p-2 border-b border-slate-300">
+Total 60%
+</th>
      {data.map((record) => (
-          <th className="w-1/2 p-2 border border-slate-300">{record[19]}</th>
+          <th className="p-2 border-b border-slate-300 font-medium">{record[10]}</th>
      ))}
         </tr>
-        <tr className="bg-slate-200 text-center">
-          <th className="w-1/2 p-2 border border-slate-300">Attendance points</th>
+        <tr className="bg-slate-100 text-center font-medium">
+          <th className="bg-red-500 text-white p-2 font-bold">
+The use of AI*
+</th>
      {data.map((record) => (
-          <th className="w-1/2 p-2 border border-slate-300">{record[20]}</th>
+          <th className="w-1/2 p-2 font-medium">{record[11].toLowerCase()}</th>
      ))}
         </tr>
       </thead>
     </table>
+    </div>
 
-    <br></br>
-
-    <table className="w-full rounded-lg overflow-hidden">
-      <thead>
-        <tr className="bg-slate-200 text-center">
-          <th className="w-1/2 p-2">Class</th>
-          <th className="w-1/2 p-2 ">Status</th>
+    <div className="h-[26rem] overflow-y-auto flex justify-center">
+    <table className="flex-col w-full rounded-lg md:w-4/5 overflow-hidden">
+      <thead className="sticky top-0 bg-white shadow-md">
+        <tr className="text-orange-600 text-center border-slate-300 border-b-2">
+          <th className="w-1/3 sm:w-1/4 p-1 sm:p-2">Task</th>
+          <th className="w-1/3 sm:w-1/2 p-1 sm:p-2">Full Score (%)</th>
+          <th className="w-1/3 p-1 sm:p-2">Achieved (%)</th>
         </tr>
       </thead>
       <tbody>
-        {data.map((record, index) => (
-          // Iterating over classIndexes and classOffset inside the map loop
-          classIndexes.map((classIndex, idx) => (
-            <tr key={`${index}-${classIndex}`} className="even:bg-slate-100 hover:bg-slate-100 text-center">
-              <td className="w-1/2 p-2 border border-slate-300">Class {classOffset[idx]}</td>
-              <td className={`text-white font-bold w-1/2 p-2 border border-slate-300 ${getStatusColor(record[classIndex])}`}>
-                {getStatusFromCharacter(record[classIndex])}
-              </td>
-            </tr>
-          ))
-        ))}
+{tasks.map((task, index) => ( <tr className="odd:bg-slate-100 hover:bg-slate-300 text-center">
+          <td className="bg-slate-200 p-2 border-b border-slate-300">{task}</td>
+          <td className="p-2 border-b border-slate-300">{fullScores[index]}</td>
+          <td className="text-center justify-center w-full border-b border-slate-300">{getScoreOrDash(data[0], index + 3)}</td>
+        </tr>
+      ))}
       </tbody>
     </table>
+    </div>
     </div>
   );
 };
